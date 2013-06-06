@@ -1,0 +1,11 @@
+Universal BRSAR Patcher 
+----------------------------------
+In order for the batch file to work properly, you must have the sound folder EXACTLY as it is on the game disc. 
+The usual format has the brsar(s) in the sound folder, and then another folder named stream or strm or bgm. When asked, you must give the name of the folder in which you have your custom BRSTMs. They must also all be properly renamed to correspond with whichever songs you are replacing. Then, you will have to input the file name of your UNEDITED ORIGINAL brsar. The batch script will create a backup for you. Have fun with your music hacks!
+
+Some previews of games with replaced music and patched RSARs:
+
+New Play Control! Mario Power Tennis - http://www.youtube.com/watch?v=H5ejeWrADb4
+Tales of Symphonia: Dawn of the New World - http://www.youtube.com/watch?v=NhWm_jwk2NA
+
+soneek 
