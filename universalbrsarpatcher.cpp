@@ -13,8 +13,13 @@ int main(int argc, const char* argv[])
 {
     if (argc != 3)
     {
-        std::cerr << "Universal BRSAR Patcher by soneek\nUsage: " << argv[0] << " filename search_term\n"
-            "Prints offsets where search_term is found in file.\nModified to help with patching of brsars.\nThe search term should be the path from the brsar, to the BRSTM file.\nExample of usage with Mario Power Tennis:\nbrsarsearch soundtennis_eng.brsar stream/don-tai.brstm\n";
+        std::cerr << "Universal BRSAR Patcher by soneek" << std::endl <<
+            "Usage: " << argv[0] << " filename search_term" << std::endl <<
+            "Prints offsets where search_term is found in file." << std::endl <<
+            "Modified to help with patching of brsars." << std::endl <<
+            "The search term should be the path from the brsar, to the BRSTM file." << std::endl <<
+            "Example of usage with Mario Power Tennis:" << std::endl <<
+            argv[0] << "soundtennis_eng.brsar stream/don-tai.brstm" << std::endl;
         return 1;
     }
 
@@ -32,8 +37,8 @@ int main(int argc, const char* argv[])
         file_content.reserve(file_size);
         char buffer[16384];
         std::streamsize chars_read;
-		int brspos = 0;
-		
+        int brspos = 0;
+        
         while (file.read(buffer, sizeof buffer), chars_read = file.gcount())
             file_content.append(buffer, chars_read);
 
@@ -44,61 +49,73 @@ int main(int argc, const char* argv[])
                  (found_at = file_content.find(search_term, offset)) !=
                                                             std::string::npos;
                  offset = found_at + search_term_size)
-				 brspos = found_at - 28; 
-                 std::cout << brspos << std::endl;
-				 std::cout << std::hex << brspos << std::endl;
+            {
+                 brspos = found_at - 28; 
+            }
+
+            // It's possible we didn't find anything.
+            if (brspos == 0)
+            {
+                std::cerr << "Search term not found. Did you place your files"
+                    << " in the correct directory?" << std::endl;
+                return 1;
+            }
+
+            std::cout << brspos << std::endl;
+            std::cout << std::hex << brspos << std::endl;
         }
-		
-		FILE * brstm;
-//		FILE * brsar;
-		std::ofstream brsar;
-		char brstmbuffer [33];
-		brstm = fopen ( search_term, "rb" );
-		brsar.open( filename, ios::in|ios::out|ios::binary);
-		//fputs ( "This is an apple." , pFile );
-		fseek ( brstm , 0 , SEEK_END );
-		brsar.seekp(brspos);
-		std::string brstmsize = ""; 
-		brstmsize.insert(0,itoa(ftell(brstm),brstmbuffer,16));		
-		while ( brstmsize.length() < 8 )
-			brstmsize.insert(0,"0");
-		int i;
-		int temp;
-		unsigned char rbytes[4];
-		for( i = 0; i < 4; ++i ) {
+        
+        FILE * brstm;
+//        FILE * brsar;
+        std::ofstream brsar;
+        char brstmbuffer [33];
+        brstm = fopen ( search_term, "rb" );
+        brsar.open( filename, ios::in|ios::out|ios::binary);
+        //fputs ( "This is an apple." , pFile );
+        fseek ( brstm , 0 , SEEK_END );
+        brsar.seekp(brspos);
+        std::string brstmsize = ""; 
+        brstmsize.insert(0,itoa(ftell(brstm),brstmbuffer,16));        
+        while ( brstmsize.length() < 8 )
+            brstmsize.insert(0,"0");
+        int i;
+        int temp;
+        unsigned char rbytes[4];
+        for( i = 0; i < 4; ++i ) {
         sscanf( brstmsize.c_str() + 2 * i, "%2x", &temp );
         rbytes[i] = temp;
-		}	
-		brsar.write((char*)rbytes, 4);
-//		fwrite(rbytes, 1, sizeof(rbytes), brsar);
-		std::cout << rbytes << std::endl;
-//		std::cout << search_term + " patched in" << std::endl;
-//		fputs ( " sam" , pFile );
-		brsar.close();
-		fclose ( brstm );
+        }    
+        brsar.write((char*)rbytes, 4);
+//        fwrite(rbytes, 1, sizeof(rbytes), brsar);
+        std::cout << rbytes << std::endl;
+//        std::cout << search_term + " patched in" << std::endl;
+//        fputs ( " sam" , pFile );
+        brsar.close();
+        fclose ( brstm );
     }
 }
 
 char* itoa(int value, char* result, int base) {
-		// check that the base if valid
-		if (base < 2 || base > 36) { *result = '\0'; return result; }
-	
-		char* ptr = result, *ptr1 = result, tmp_char;
-		int tmp_value;
-	
-		do {
-			tmp_value = value;
-			value /= base;
-			*ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz" [35 + (tmp_value - value * base)];
-		} while ( value );
-	
-		// Apply negative sign
-		if (tmp_value < 0) *ptr++ = '-';
-		*ptr-- = '\0';
-		while(ptr1 < ptr) {
-			tmp_char = *ptr;
-			*ptr--= *ptr1;
-			*ptr1++ = tmp_char;
-		}
-		return result;
+        // check that the base if valid
+        if (base < 2 || base > 36) { *result = '\0'; return result; }
+    
+        char* ptr = result, *ptr1 = result, tmp_char;
+        int tmp_value;
+    
+        do {
+            tmp_value = value;
+            value /= base;
+            *ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz" [35 + (tmp_value - value * base)];
+        } while ( value );
+    
+        // Apply negative sign
+        if (tmp_value < 0) *ptr++ = '-';
+        *ptr-- = '\0';
+        while(ptr1 < ptr) {
+            tmp_char = *ptr;
+            *ptr--= *ptr1;
+            *ptr1++ = tmp_char;
+        }
+        return result;
 }
+
