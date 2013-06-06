@@ -49,9 +49,20 @@ int main(int argc, const char* argv[])
                  (found_at = file_content.find(search_term, offset)) !=
                                                             std::string::npos;
                  offset = found_at + search_term_size)
+            {
                  brspos = found_at - 28; 
-                 std::cout << brspos << std::endl;
-                 std::cout << std::hex << brspos << std::endl;
+            }
+
+            // It's possible we didn't find anything.
+            if (brspos == 0)
+            {
+                std::cerr << "Search term not found. Did you place your files"
+                    << " in the correct directory?" << std::endl;
+                return 1;
+            }
+
+            std::cout << brspos << std::endl;
+            std::cout << std::hex << brspos << std::endl;
         }
         
         FILE * brstm;
