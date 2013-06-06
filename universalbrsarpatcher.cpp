@@ -13,8 +13,13 @@ int main(int argc, const char* argv[])
 {
     if (argc != 3)
     {
-        std::cerr << "Universal BRSAR Patcher by soneek\nUsage: " << argv[0] << " filename search_term\n"
-            "Prints offsets where search_term is found in file.\nModified to help with patching of brsars.\nThe search term should be the path from the brsar, to the BRSTM file.\nExample of usage with Mario Power Tennis:\nbrsarsearch soundtennis_eng.brsar stream/don-tai.brstm\n";
+        std::cerr << "Universal BRSAR Patcher by soneek" << std::endl <<
+            "Usage: " << argv[0] << " filename search_term" << std::endl <<
+            "Prints offsets where search_term is found in file." << std::endl <<
+            "Modified to help with patching of brsars." << std::endl <<
+            "The search term should be the path from the brsar, to the BRSTM file." << std::endl <<
+            "Example of usage with Mario Power Tennis:" << std::endl <<
+            argv[0] << "soundtennis_eng.brsar stream/don-tai.brstm" << std::endl;
         return 1;
     }
 
@@ -102,3 +107,4 @@ char* itoa(int value, char* result, int base) {
 		}
 		return result;
 }
+
